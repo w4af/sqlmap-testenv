@@ -6,15 +6,15 @@
             error_reporting(E_PARSE);
 
         // Connect to the MySQL database management system
-        $link = mysql_pconnect("localhost", "root", "testpass");
+        $link = mysqli_connect("localhost", "root", "");
         if (!$link) {
-            die(mysql_error());
+            die(mysqli_connect_error());
         }
 
         // Make 'testdb' the current database
-        $db_selected = mysql_select_db("testdb");
+        $db_selected = mysqli_select_db($link, "testdb");
         if (!$db_selected) {
-            die (mysql_error());
+            die (mysqli_error($link));
         }
 
         // Print results in HTML
@@ -24,11 +24,11 @@
         //print "<b>SQL query:</b> " . $query . "<br>\n";
 
         // Perform SQL injection affected query
-        $result = mysql_query($query);
+        $result = mysqli_query($link, $query);
 
         if (!$result) {
             if ($show_errors)
-                print "<b>SQL error:</b> ". mysql_error() . "<br>\n";
+                print "<b>SQL error:</b> ". mysqli_error($link) . "<br>\n";
             exit(1);
         }
 
@@ -38,7 +38,7 @@
         print "<b>SQL results:</b>\n";
         print "<table border=\"1\">\n";
 
-        while ($line = mysql_fetch_array($result, MYSQL_ASSOC)) {
+        while ($line = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             print "<tr>";
             foreach ($line as $col_value) {
                 print "<td>" . $col_value . "</td>";
